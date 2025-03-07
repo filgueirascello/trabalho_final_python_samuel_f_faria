@@ -81,9 +81,6 @@ def data_clean():
     df_work["origem"] = df_work.loc[:,"origem"].apply(lambda x: padroniza_str(x))
     df_work["destino"] = df_work.loc[:,"destino"].apply(lambda x: padroniza_str(x))
 
-    df_work.to_csv("base_tratada.csv", index=False)
-
-
-
+    # df_work.to_csv("base_tratada.csv", index=False)
 
     return df_work

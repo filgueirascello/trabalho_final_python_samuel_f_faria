@@ -3,72 +3,46 @@ import sqlite3
 from transform import classifica_turno, calc_horas
 from data_clean import data_clean
 
-# Conectando ao banco SQLite (o arquivo será criado se não existir)
-conn = sqlite3.connect('trabalhofinal.db')
+def connect_to_db(db_name):
+    """
+    Função para conectar ao banco SQLite.
+    """
+    return sqlite3.connect(db_name)
 
+def insert_df_to_db(df, conn, table_name):
+    """
+    Função para inserir o DataFrame na tabela do banco de dados.
+    """
+    df.to_sql(table_name, conn, if_exists='replace', index=False)
 
-# Gera o DataFrame a partir do clean.py
-df = data_clean()
+def process_data():
+    """
+    Função principal para orquestrar o processo de limpeza, transformação e inserção dos dados.
+    """
+    # Conectar ao banco SQLite
+    conn = connect_to_db('trabalhofinal.db')
 
+    try:
+        # Gera o DataFrame a partir da função de limpeza
+        df = data_clean()
 
-df['tempo_voo_minutos'] = calc_horas(df['tempo_voo'])
+        # Aplica as transformações no DataFrame
+        df['tempo_voo_minutos'] = calc_horas(df['tempo_voo'])
+        df['turno'] = df['data_hora'].apply(classifica_turno)
 
+        # Inserir o DataFrame na tabela
+        insert_df_to_db(df, conn, 'table_trabalho_final')
 
-df['turno'] = df['data_hora'].apply(classifica_turno)
-
-
-# Inserindo o DataFrame na tabela
-df.to_sql('table_trabalho_final', conn, if_exists='replace', index=False)
-
-
-# Sugestao main
-
-# import pandas as pd
-# import sqlite3
-# from transform import classifica_turno, calc_horas
-# from data_clean import data_clean
-
-# def connect_to_db(db_name):
-#     """
-#     Função para conectar ao banco SQLite.
-#     """
-#     return sqlite3.connect(db_name)
-
-# def insert_df_to_db(df, conn, table_name):
-#     """
-#     Função para inserir o DataFrame na tabela do banco de dados.
-#     """
-#     df.to_sql(table_name, conn, if_exists='replace', index=False)
-
-# def process_data():
-#     """
-#     Função principal para orquestrar o processo de limpeza, transformação e inserção dos dados.
-#     """
-#     # Conectar ao banco SQLite
-#     conn = connect_to_db('trabalhofinal.db')
-
-#     try:
-#         # Gera o DataFrame a partir da função de limpeza
-#         df = data_clean()
-
-#         # Aplica as transformações no DataFrame
-#         df['tempo_voo_minutos'] = calc_horas(df['tempo_voo'])
-#         df['turno'] = df['data_hora'].apply(classifica_turno)
-
-#         # Inserir o DataFrame na tabela
-#         insert_df_to_db(df, conn, 'table_trabalho_final')
-
-#         print("Dados processados e inseridos com sucesso na tabela.")
+        print("Dados processados e inseridos com sucesso na tabela.")
     
-#     except Exception as e:
-#         print(f"Erro ao processar os dados: {e}")
+    except Exception as e:
+        print(f"Erro ao processar os dados: {e}")
     
-#     finally:
-#         # Fechar a conexão
-#         conn.close()
+    finally:
+        # Fechar a conexão
+        conn.close()
 
-# if __name__ == "__main__":
-#     process_data()
+if __name__ == "__main__":
+    process_data()
 
 
-# aula -- parei em 2:06

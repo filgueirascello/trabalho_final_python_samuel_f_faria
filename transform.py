@@ -1,37 +1,7 @@
 import pandas as pd
 
-'''
-# def calc_horas(coluna_tempo_voo):
-#    return coluna_transformada_hora
-
 def calc_horas(coluna_tempo_voo):
     return coluna_tempo_voo * 60
-
-
-# Aplicando a função na coluna
-df['tempo_voo_minutos'] = calc_horas(df['tempo_voo'])
-
-
-
-
-# def classifica_turno(coluna_data_hora):
-    
-#     Regra de classificação:
-#     06:00 - 12:00 : MANHÃ
-#     12:00 - 18:00 : TARDE
-#     18:00 - 00:00 : NOITE
-#     00:00 - 06:00 : MADRUGADA
-
-#     return coluna_turno
-# '''
-
-
-def calc_horas(coluna_tempo_voo):
-    return coluna_tempo_voo * 60
-
-
-# Aplicando a função na coluna
-# df['tempo_voo_minutos'] = calc_horas(df['tempo_voo'])
 
 
 def classifica_turno(coluna_data_hora):
@@ -46,6 +16,3 @@ def classifica_turno(coluna_data_hora):
         return "NOITE"
     else:
         return "MADRUGADA"
-    
-
-# df['turno'] = df['data_hora'].apply(classifica_turno)
